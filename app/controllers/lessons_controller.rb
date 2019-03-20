@@ -14,8 +14,9 @@ class LessonsController < ApplicationController
   private
 
   def require_authorized_for_current_lesson
-    if current_user.enrolled_in? != true
-      redirect_to lesson_path, alert: 'You Must Be Enrolled To View Lessons', status: :unauthorized
+    if !current_user.enrolled_in?(current_lesson.section.course)
+      flash[:notice] = "You Must be Enrolled to View Lessons"
+      redirect_to course_path(current_lesson.section.course)
     end
   end
 
